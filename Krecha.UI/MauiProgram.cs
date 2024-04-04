@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Krecha.Lib.Data;
+using Microsoft.Extensions.Logging;
 
 namespace Krecha.UI;
 public static class MauiProgram
@@ -15,11 +16,25 @@ public static class MauiProgram
 
         builder.Services.AddMauiBlazorWebView();
 
+        builder.Services.AddDbContext<SettlementsDbContext>();
+
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
 #endif
 
-        return builder.Build();
+        var app = builder.Build();
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<SettlementsDbContext>();
+
+            // uncomment to start with empty db
+            //db.Database.EnsureDeleted();
+
+            db.Database.EnsureCreated();
+        }
+
+        return app;
     }
 }
