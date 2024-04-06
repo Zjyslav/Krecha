@@ -21,4 +21,12 @@ public class SettlementsDbContext : DbContext
     {
         optionsBuilder.UseSqlite($"Data Source={DbPath}");
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Currency>()
+            .HasData(SeedGenerator.GetCurrencySeed());
+
+        base.OnModelCreating(modelBuilder);
+    }
 }
