@@ -25,6 +25,15 @@ public class SettlementsDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Currency>()
+            .HasKey(c => c.Id);
+
+        modelBuilder.Entity<Settlement>()
+            .HasKey(s => s.Id);
+
+        modelBuilder.Entity<SettlementEntry>()
+            .HasKey(e => e.Id);
+
+        modelBuilder.Entity<Currency>()
             .HasData(SeedGenerator.GetCurrencySeed());
 
         base.OnModelCreating(modelBuilder);
