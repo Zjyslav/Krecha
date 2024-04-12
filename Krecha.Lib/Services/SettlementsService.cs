@@ -13,7 +13,7 @@ public class SettlementsService
         _dbContext = dbContext;
     }
 
-    public async Task<CreateSettlementResponse> CreateSettlement(CreateSettlementRequest request)
+    public async Task<CreateSettlementResponse> CreateSettlementAsync(CreateSettlementRequest request)
     {
         CreateSettlementResponse response = new();
 
