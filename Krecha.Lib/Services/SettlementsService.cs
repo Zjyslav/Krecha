@@ -36,6 +36,7 @@ public class SettlementsService
         await _dbContext.Settlements.AddAsync(toCreate);
         await _dbContext.SaveChangesAsync();
 
+        response.Success = true;
         response.CreatedSettlementId = toCreate.Id;
         return response;
     }
@@ -62,7 +63,23 @@ public class SettlementsService
         settlement.Entries.Add(toCreate);
         await _dbContext.SaveChangesAsync();
 
+        response.Success = true;
         response.CreatedEntryId = toCreate.Id;
         return response;
+    }
+
+    public async Task<CreateCurrencyResponse> CreateCurrencyAsync(CreateCurrencyRequest request)
+    {
+        Currency toCreate = new()
+        {
+            Name = request.Name,
+            Symbol = request.Symbol,
+            SymbolPosition = request.SymbolPosition,
+        };
+
+        await _dbContext.Currencies.AddAsync(toCreate);
+        await _dbContext.SaveChangesAsync();
+
+        return CreateCurrencyResponse.Successful(toCreate.Id);
     }
 }
