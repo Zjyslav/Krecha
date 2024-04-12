@@ -1,6 +1,4 @@
-﻿using Krecha.Lib.Data.Models;
-
-namespace Krecha.Lib.Services.Requests;
+﻿namespace Krecha.Lib.Services.Requests;
 public class CreateSettlementRequest
 {
     public CreateSettlementRequest(string name, string description, int currencyId)

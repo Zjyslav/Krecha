@@ -39,4 +39,30 @@ public class SettlementsService
         response.CreatedSettlementId = toCreate.Id;
         return response;
     }
+
+    public async Task<CreateSettlementEntryResponse> CreateSettlementEntryAsync(CreateSettlementEntryRequest request)
+    {
+        CreateSettlementEntryResponse response = new();
+
+        Settlement? settlement = _dbContext.Settlements
+            .FirstOrDefault(s => s.Id == request.SettlementId);
+
+        if (settlement is null)
+        {
+            response.Success = false;
+            return response;
+        }
+
+        SettlementEntry toCreate = new()
+        {
+            Description = request.Description,
+            Amount = request.Amount,
+        };
+
+        settlement.Entries.Add(toCreate);
+        await _dbContext.SaveChangesAsync();
+
+        response.CreatedEntryId = toCreate.Id;
+        return response;
+    }
 }
