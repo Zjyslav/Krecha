@@ -15,15 +15,12 @@ public class SettlementsService
 
     public async Task<CreateSettlementResponse> CreateSettlementAsync(CreateSettlementRequest request)
     {
-        CreateSettlementResponse response = new();
-
         Currency? currency = _dbContext.Currencies
             .FirstOrDefault(c => c.Id == request.CurrencyId);
 
         if (currency is null)
         {
-            response.Success = false;
-            return response;
+            return CreateSettlementResponse.Failed();
         }
 
         Settlement toCreate = new()
@@ -36,9 +33,7 @@ public class SettlementsService
         await _dbContext.Settlements.AddAsync(toCreate);
         await _dbContext.SaveChangesAsync();
 
-        response.Success = true;
-        response.CreatedSettlementId = toCreate.Id;
-        return response;
+        return CreateSettlementResponse.Successful(toCreate.Id);
     }
 
     public async Task<CreateSettlementEntryResponse> CreateSettlementEntryAsync(CreateSettlementEntryRequest request)
@@ -50,8 +45,7 @@ public class SettlementsService
 
         if (settlement is null)
         {
-            response.Success = false;
-            return response;
+            return CreateSettlementEntryResponse.Failed();
         }
 
         SettlementEntry toCreate = new()
@@ -63,9 +57,7 @@ public class SettlementsService
         settlement.Entries.Add(toCreate);
         await _dbContext.SaveChangesAsync();
 
-        response.Success = true;
-        response.CreatedEntryId = toCreate.Id;
-        return response;
+        return CreateSettlementEntryResponse.Successful(toCreate.Id);
     }
 
     public async Task<CreateCurrencyResponse> CreateCurrencyAsync(CreateCurrencyRequest request)
