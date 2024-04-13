@@ -30,7 +30,7 @@ public class SettlementsService
             Currency = currency,
         };
 
-        await _dbContext.Settlements.AddAsync(toCreate);
+        _dbContext.Settlements.Add(toCreate);
         await _dbContext.SaveChangesAsync();
 
         return CreateSettlementResponse.Successful(toCreate.Id);
@@ -69,7 +69,7 @@ public class SettlementsService
             SymbolPosition = request.SymbolPosition,
         };
 
-        await _dbContext.Currencies.AddAsync(toCreate);
+        _dbContext.Currencies.Add(toCreate);
         await _dbContext.SaveChangesAsync();
 
         return CreateCurrencyResponse.Successful(toCreate.Id);

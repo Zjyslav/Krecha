@@ -24,6 +24,7 @@ public class SettlementsDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Primary Keys:
         modelBuilder.Entity<Currency>()
             .HasKey(c => c.Id);
 
@@ -33,6 +34,20 @@ public class SettlementsDbContext : DbContext
         modelBuilder.Entity<SettlementEntry>()
             .HasKey(e => e.Id);
 
+        // Relationships
+        modelBuilder.Entity<Settlement>()
+            .HasMany(s => s.Entries)
+            .WithOne(e => e.Settlement)
+            .HasForeignKey("SettlementId")
+            .IsRequired();
+
+        modelBuilder.Entity<Currency>()
+            .HasMany(c => c.Settlements)
+            .WithOne(s => s.Currency)
+            .HasForeignKey("CurrencyId")
+            .IsRequired();
+
+        // Seed data:
         modelBuilder.Entity<Currency>()
             .HasData(SeedGenerator.GetCurrencySeed());
 
