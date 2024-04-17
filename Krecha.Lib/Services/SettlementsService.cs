@@ -6,17 +6,22 @@ using Krecha.Lib.Services.Responses;
 namespace Krecha.Lib.Services;
 public class SettlementsService
 {
-    private readonly SettlementsDbContext _dbContext;
+    private readonly Repository<Currency> _currencyRepository;
+    private readonly Repository<Settlement> _settlementRepository;
+    private readonly Repository<SettlementEntry> _settlementEntryRepository;
 
-    public SettlementsService(SettlementsDbContext dbContext)
+    public SettlementsService(Repository<Currency> currencyRepository,
+                              Repository<Settlement> settlementRepository,
+                              Repository<SettlementEntry> settlementEntryRepository)
     {
-        _dbContext = dbContext;
+        _currencyRepository = currencyRepository;
+        _settlementRepository = settlementRepository;
+        _settlementEntryRepository = settlementEntryRepository;
     }
 
     public async Task<CreateSettlementResponse> CreateSettlementAsync(CreateSettlementRequest request)
     {
-        Currency? currency = _dbContext.Currencies
-            .FirstOrDefault(c => c.Id == request.CurrencyId);
+        Currency? currency = await _currencyRepository.GetById(request.CurrencyId);
 
         if (currency is null)
         {
@@ -30,8 +35,7 @@ public class SettlementsService
             Currency = currency,
         };
 
-        _dbContext.Settlements.Add(toCreate);
-        await _dbContext.SaveChangesAsync();
+        await _settlementRepository.Create(toCreate);
 
         return CreateSettlementResponse.Successful(toCreate.Id);
     }
@@ -40,8 +44,7 @@ public class SettlementsService
     {
         CreateSettlementEntryResponse response = new();
 
-        Settlement? settlement = _dbContext.Settlements
-            .FirstOrDefault(s => s.Id == request.SettlementId);
+        Settlement? settlement = await _settlementRepository.GetById(request.SettlementId);
 
         if (settlement is null)
         {
@@ -54,8 +57,7 @@ public class SettlementsService
             Amount = request.Amount,
         };
 
-        settlement.Entries.Add(toCreate);
-        await _dbContext.SaveChangesAsync();
+        await _settlementEntryRepository.Create(toCreate);
 
         return CreateSettlementEntryResponse.Successful(toCreate.Id);
     }
@@ -69,8 +71,7 @@ public class SettlementsService
             SymbolPosition = request.SymbolPosition,
         };
 
-        _dbContext.Currencies.Add(toCreate);
-        await _dbContext.SaveChangesAsync();
+        await _currencyRepository.Create(toCreate);
 
         return CreateCurrencyResponse.Successful(toCreate.Id);
     }
