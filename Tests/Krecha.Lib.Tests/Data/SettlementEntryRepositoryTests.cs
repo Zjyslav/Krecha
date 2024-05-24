@@ -1,21 +1,16 @@
 ﻿using AutoFixture;
 using Krecha.Lib.Data;
 using Krecha.Lib.Data.Models;
-using Krecha.Lib.Tests.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Krecha.Lib.Tests.Data;
-public class SettlementEntryRepositoryTests
+public class SettlementEntryRepositoryTests : RepositoryTestsBase
 {
     private readonly Repository<SettlementEntry, SettlementsDbContext> _settlementEntryRepository;
-    private readonly SettlementsDbContext _dbContext;
-    private readonly Fixture _fixture = new();
 
-    public SettlementEntryRepositoryTests()
+    public SettlementEntryRepositoryTests() : base()
     {
-        _dbContext = EFHelpers.SetupInMemoryDbContext();
-        _settlementEntryRepository = new(_dbContext);
-
+        _settlementEntryRepository = new(DbContext);
     }
 
     [Fact]
@@ -89,8 +84,8 @@ public class SettlementEntryRepositoryTests
 
         // Act
         await _settlementEntryRepository.Create(expected);
-        var actual = await _dbContext.Entries.FindAsync(expected.Id);
-        var actuaEntityState = _dbContext.Entry(expected).State;
+        var actual = await DbContext.Entries.FindAsync(expected.Id);
+        var actuaEntityState = DbContext.Entry(expected).State;
 
         // Assert
         Assert.NotNull(actual);
@@ -173,7 +168,7 @@ public class SettlementEntryRepositoryTests
 
         // Act
         var result = await _settlementEntryRepository.Update(entry.Id, currency => { });
-        var actual = _dbContext.Entry(result!).State;
+        var actual = DbContext.Entry(result!).State;
 
         // Assert
         Assert.Equal(expected, actual);
@@ -214,8 +209,8 @@ public class SettlementEntryRepositoryTests
 
         // Act
         await _settlementEntryRepository.Delete(entry.Id);
-        var actual = await _dbContext.Entries.FindAsync(entry.Id);
-        var actualEntityState = _dbContext.Entry(entry).State;
+        var actual = await DbContext.Entries.FindAsync(entry.Id);
+        var actualEntityState = DbContext.Entry(entry).State;
 
         // Assert
         Assert.Null(actual);
@@ -231,7 +226,7 @@ public class SettlementEntryRepositoryTests
 
     private List<SettlementEntry> CreateTestSettlementEntries(int count)
     {
-        List<SettlementEntry> output = _fixture
+        List<SettlementEntry> output = Fixture
             .Build<SettlementEntry>()
                 .Without(entry => entry.Id)
                 .Without(entry => entry.Settlement)
@@ -239,15 +234,5 @@ public class SettlementEntryRepositoryTests
             .ToList();
 
         return output;
-    }
-
-    private void AddEntitiesToInMemoryDb<TEntity>(List<TEntity> entities)
-    where TEntity : class
-    {
-        _dbContext
-            .Set<TEntity>()
-            .AddRange(entities);
-
-        _dbContext.SaveChanges();
     }
 }

@@ -5,16 +5,13 @@ using Krecha.Lib.Tests.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Krecha.Lib.Tests.Data;
-public class SettlementRepositoryTests
+public class SettlementRepositoryTests : RepositoryTestsBase
 {
     private readonly Repository<Settlement, SettlementsDbContext> _settlementRepository;
-    private readonly SettlementsDbContext _dbContext;
-    private readonly Fixture _fixture = new();
 
-    public SettlementRepositoryTests()
+    public SettlementRepositoryTests() : base()
     {
-        _dbContext = EFHelpers.SetupInMemoryDbContext();
-        _settlementRepository = new(_dbContext);
+        _settlementRepository = new(DbContext);
     }
 
     [Fact]
@@ -89,8 +86,8 @@ public class SettlementRepositoryTests
 
         // Act
         await _settlementRepository.Create(expected);
-        var actual = await _dbContext.Settlements.FindAsync(expected.Id);
-        var actuaEntityState = _dbContext.Entry(expected).State;
+        var actual = await DbContext.Settlements.FindAsync(expected.Id);
+        var actuaEntityState = DbContext.Entry(expected).State;
 
         // Assert
         Assert.NotNull(actual);
@@ -170,7 +167,7 @@ public class SettlementRepositoryTests
 
         // Act
         var result = await _settlementRepository.Update(settlement.Id, currency => { });
-        var actual = _dbContext.Entry(result!).State;
+        var actual = DbContext.Entry(result!).State;
 
         // Assert
         Assert.Equal(expected, actual);
@@ -211,8 +208,8 @@ public class SettlementRepositoryTests
 
         // Act
         await _settlementRepository.Delete(settlement.Id);
-        var actual = await _dbContext.Settlements.FindAsync(settlement.Id);
-        var actualEntityState = _dbContext.Entry(settlement).State;
+        var actual = await DbContext.Settlements.FindAsync(settlement.Id);
+        var actualEntityState = DbContext.Entry(settlement).State;
 
         // Assert
         Assert.Null(actual);
@@ -228,7 +225,7 @@ public class SettlementRepositoryTests
     
     private List<Settlement> CreateTestSettlements(int count)
     {
-        List<Settlement> output = _fixture
+        List<Settlement> output = Fixture
             .Build<Settlement>()
                 .Without(settlement => settlement.Id)
                 .Without(settlement => settlement.Entries)
@@ -237,15 +234,5 @@ public class SettlementRepositoryTests
             .ToList();
 
         return output;
-    }
-    
-    private void AddEntitiesToInMemoryDb<TEntity>(List<TEntity> entities)
-        where TEntity : class
-    {
-        _dbContext
-            .Set<TEntity>()
-            .AddRange(entities);
-
-        _dbContext.SaveChanges();
     }
 }
