@@ -244,7 +244,7 @@ public class RepositoryTests
         Assert.Equal(expected, actual);
         Assert.Equal(expectedEntityState, actuaEntityState);
     }
-    
+
     [Fact]
     public async Task Create_ForSettlementEntry_ShouldAddItToDb()
     {
@@ -300,6 +300,204 @@ public class RepositoryTests
 
         // Assert
         await Assert.ThrowsAnyAsync<ArgumentException>(act);
+    }
+
+    [Fact]
+    public async Task Update_WhenCurrencyDoesntExist_ShouldReturnNull()
+    {
+        // Arrange
+        int currencyId = 11;
+
+        // Act
+        var actual = await _currencyRepository.Update(currencyId, currency => { });
+
+        // Assert
+        Assert.Null(actual);
+    }
+    
+    [Fact]
+    public async Task Update_WhenSettlementDoesntExist_ShouldReturnNull()
+    {
+        // Arrange
+        int settlementId = 11;
+
+        // Act
+        var actual = await _settlementRepository.Update(settlementId, settlement => { });
+
+        // Assert
+        Assert.Null(actual);
+    }
+    
+    [Fact]
+    public async Task Update_WhenSettlementEntryDoesntExist_ShouldReturnNull()
+    {
+        // Arrange
+        int entryId = 11;
+
+        // Act
+        var actual = await _settlementEntryRepository.Update(entryId, entry => { });
+
+        // Assert
+        Assert.Null(actual);
+    }
+
+    [Fact]
+    public async Task Update_WhenCurrencyExists_ShouldApplyAllChanges()
+    {
+        // Arrange
+        Currency currency = CreateAndAddToDbTestCurrencies(1).First();
+        string expectedName = "Test Name";
+        string expectedSymbol = "Test Symbol";
+        CurrencySymbolPosition expectedSymbolPosition = CurrencySymbolPosition.After;
+
+        // Act
+        var actual = await _currencyRepository.Update(currency.Id, currency =>
+        {
+            currency.Name = expectedName;
+            currency.Symbol = expectedSymbol;
+            currency.SymbolPosition = expectedSymbolPosition;
+        });
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.Equal(expectedName, actual.Name);
+        Assert.Equal(expectedSymbol, actual.Symbol);
+        Assert.Equal(expectedSymbolPosition, actual.SymbolPosition);
+    }
+
+    [Fact]
+    public async Task Update_WhenSettlementExists_ShouldApplyAllChanges()
+    {
+        // Arrange
+        Settlement settlement = CreateAndAddToDbTestSettlements(1).First();
+        string expectedName = "Test Name";
+        string expectedDescription = "Test Description";
+        bool expectedArchived = true;
+
+        // Act
+        var actual = await _settlementRepository.Update(settlement.Id, settlement =>
+        {
+            settlement.Name = expectedName;
+            settlement.Description = expectedDescription;
+            settlement.Archived = expectedArchived;
+        });
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.Equal(expectedName, actual.Name);
+        Assert.Equal(expectedDescription, actual.Description);
+        Assert.Equal(expectedArchived, actual.Archived);
+    }
+    
+    [Fact]
+    public async Task Update_WhenSettlementEntryExists_ShouldApplyAllChanges()
+    {
+        // Arrange
+        SettlementEntry entry = CreateAndAddToDbTestSettlementEntries(1).First();
+        DateTime expectedCreatedDate = DateTime.Now.AddMinutes(-19);
+        string expectedDescription = "Test Description";
+        decimal expectedAmount = 1138;
+        bool expectedArchived = true;
+
+        // Act
+        var actual = await _settlementEntryRepository.Update(entry.Id, entry =>
+        {
+            entry.CreatedDate = expectedCreatedDate;
+            entry.Description = expectedDescription;
+            entry.Amount = expectedAmount;
+            entry.Archived = expectedArchived;
+        });
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.Equal(expectedCreatedDate, actual.CreatedDate);
+        Assert.Equal(expectedDescription, actual.Description);
+        Assert.Equal(expectedAmount, actual.Amount);
+        Assert.Equal(expectedArchived, actual.Archived);
+    }
+    
+    [Fact]
+    public async Task Update_WhenCurrencyExists_ShouldReturnTheSameObject()
+    {
+        // Arrange
+        Currency expected = CreateAndAddToDbTestCurrencies(1).First();
+
+        // Act
+        var actual = await _currencyRepository.Update(expected.Id, currency => { });
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task Update_WhenSettlementExists_ShouldReturnTheSameObject()
+    {
+        // Arrange
+        Settlement expected = CreateAndAddToDbTestSettlements(1).First();
+
+        // Act
+        var actual = await _settlementRepository.Update(expected.Id, currency => { });
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+    
+    [Fact]
+    public async Task Update_WhenSettlementEntryExists_ShouldReturnTheSameObject()
+    {
+        // Arrange
+        SettlementEntry expected = CreateAndAddToDbTestSettlementEntries(1).First();
+
+        // Act
+        var actual = await _settlementEntryRepository.Update(expected.Id, currency => { });
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task Update_WhenCurrencyExists_ShouldResultInCorrectEntityState()
+    {
+        // Arrange
+        Currency currency = CreateAndAddToDbTestCurrencies(1).First();
+        var expected = EntityState.Unchanged;
+
+        // Act
+        var result = await _currencyRepository.Update(currency.Id, currency => { });
+        var actual = _dbContext.Entry(result!).State;
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+    
+    [Fact]
+    public async Task Update_WhenSettlementExists_ShouldResultInCorrectEntityState()
+    {
+        // Arrange
+        Settlement settlement = CreateAndAddToDbTestSettlements(1).First();
+        var expected = EntityState.Unchanged;
+
+        // Act
+        var result = await _settlementRepository.Update(settlement.Id, currency => { });
+        var actual = _dbContext.Entry(result!).State;
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+    
+    [Fact]
+    public async Task Update_WhenSettlementEntryExists_ShouldResultInCorrectEntityState()
+    {
+        // Arrange
+        SettlementEntry entry = CreateAndAddToDbTestSettlementEntries(1).First();
+        var expected = EntityState.Unchanged;
+
+        // Act
+        var result = await _settlementEntryRepository.Update(entry.Id, currency => { });
+        var actual = _dbContext.Entry(result!).State;
+
+        // Assert
+        Assert.Equal(expected, actual);
     }
 
 
