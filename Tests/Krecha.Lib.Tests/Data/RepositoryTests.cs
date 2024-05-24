@@ -170,6 +170,130 @@ public class RepositoryTests
         Assert.Equivalent(expected, actual);
     }
 
+    [Fact]
+    public async Task Create_ForCurrency_ShouldReturnTheSameObject()
+    {
+        // Arrange
+        Currency expected = CreateTestCurrencies(1).First();
+
+        // Act
+        var actual = await _currencyRepository.Create(expected);
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+    
+    [Fact]
+    public async Task Create_ForSettlement_ShouldReturnTheSameObject()
+    {
+        // Arrange
+        Settlement expected = CreateTestSettlements(1).First();
+
+        // Act
+        var actual = await _settlementRepository.Create(expected);
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+    
+    [Fact]
+    public async Task Create_ForSettlementEntry_ShouldReturnTheSameObject()
+    {
+        // Arrange
+        SettlementEntry expected = CreateTestSettlementEntries(1).First();
+
+        // Act
+        var actual = await _settlementEntryRepository.Create(expected);
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task Create_ForCurrency_ShouldAddItToDb()
+    {
+        // Arrange
+        Currency expected = CreateTestCurrencies(1).First();
+
+        // Act
+        await _currencyRepository.Create(expected);
+        var actual = await _dbContext.Currencies.FindAsync(expected.Id);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.Equal(expected, actual);
+    }
+    
+    [Fact]
+    public async Task Create_ForSettlement_ShouldAddItToDb()
+    {
+        // Arrange
+        Settlement expected = CreateTestSettlements(1).First();
+
+        // Act
+        await _settlementRepository.Create(expected);
+        var actual = await _dbContext.Settlements.FindAsync(expected.Id);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.Equal(expected, actual);
+    }
+    
+    [Fact]
+    public async Task Create_ForSettlementEntry_ShouldAddItToDb()
+    {
+        // Arrange
+        SettlementEntry expected = CreateTestSettlementEntries(1).First();
+
+        // Act
+        await _settlementEntryRepository.Create(expected);
+        var actual = await _dbContext.Entries.FindAsync(expected.Id);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task Create_ForCurrencyThatExists_ShouldThrowArgumentException()
+    {
+        // Arrange
+        Currency currencyInDb = CreateAndAddToDbTestCurrencies(1).First();
+
+        // Act
+        var act = () => _currencyRepository.Create(currencyInDb);
+
+        // Assert
+        await Assert.ThrowsAnyAsync<ArgumentException>(act);
+    }
+    
+    [Fact]
+    public async Task Create_ForSettlementThatExists_ShouldThrowArgumentException()
+    {
+        // Arrange
+        Settlement settlementInDb = CreateAndAddToDbTestSettlements(1).First();
+
+        // Act
+        var act = () => _settlementRepository.Create(settlementInDb);
+
+        // Assert
+        await Assert.ThrowsAnyAsync<ArgumentException>(act);
+    }
+    
+    [Fact]
+    public async Task Create_ForSettlementEntryThatExists_ShouldThrowArgumentException()
+    {
+        // Arrange
+        SettlementEntry entryInDb = CreateAndAddToDbTestSettlementEntries(1).First();
+
+        // Act
+        var act = () => _settlementEntryRepository.Create(entryInDb);
+
+        // Assert
+        await Assert.ThrowsAnyAsync<ArgumentException>(act);
+    }
+
+
     private List<Currency> CreateAndAddToDbTestCurrencies(int count)
     {
         var currencies = CreateTestCurrencies(count);
