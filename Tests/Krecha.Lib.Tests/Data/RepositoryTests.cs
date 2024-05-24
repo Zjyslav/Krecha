@@ -90,6 +90,86 @@ public class RepositoryTests
         }
     }
 
+    [Fact]
+    public async Task GetById_WhenCurrencyDoesntExist_ShouldReturnNull()
+    {
+        // Arrange
+        int currencyId = 1;
+
+        // Act
+        var actualCurrency = await _currencyRepository.GetById(currencyId);
+
+        // Assert
+        Assert.Null(actualCurrency);
+    }
+    
+    [Fact]
+    public async Task GetById_WhenSettlementDoesntExist_ShouldReturnNull()
+    {
+        // Arrange
+        int settlementId = 2;
+
+        // Act
+        var actualSettlement = await _settlementRepository.GetById(settlementId);
+
+        // Assert
+        Assert.Null(actualSettlement);
+    }
+    
+    [Fact]
+    public async Task GetById_WhenSettlementEntryDoesntExist_ShouldReturnNull()
+    {
+        // Arrange
+        int settlementEntryId = 3;
+
+        // Act
+        var actualSettlementEntry = await _settlementEntryRepository.GetById(settlementEntryId);
+
+        // Assert
+    }
+
+    [Fact]
+    public async Task GetById_WhenCurrencyExists_ShouldReturnIt()
+    {
+        // Arrage
+        Currency expected = CreateAndAddToDbTestCurrencies(1).First();
+
+        // Act
+        var actual = await _currencyRepository.GetById(expected.Id);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.Equivalent(expected, actual);
+    }
+    
+    [Fact]
+    public async Task GetById_WhenSettlementExists_ShouldReturnIt()
+    {
+        // Arrage
+        Settlement expected = CreateAndAddToDbTestSettlements(1).First();
+
+        // Act
+        var actual = await _settlementRepository.GetById(expected.Id);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.Equivalent(expected, actual);
+    }
+    
+    [Fact]
+    public async Task GetById_WhenSettlementEntryExists_ShouldReturnIt()
+    {
+        // Arrage
+        SettlementEntry expected = CreateAndAddToDbTestSettlementEntries(1).First();
+
+        // Act
+        var actual = await _settlementEntryRepository.GetById(expected.Id);
+
+        // Assert
+        Assert.NotNull(actual);
+        Assert.Equivalent(expected, actual);
+    }
+
     private List<Currency> CreateAndAddToDbTestCurrencies(int count)
     {
         var currencies = CreateTestCurrencies(count);
