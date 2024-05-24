@@ -214,14 +214,17 @@ public class RepositoryTests
     {
         // Arrange
         Currency expected = CreateTestCurrencies(1).First();
+        var expectedEntityState = EntityState.Unchanged;
 
         // Act
         await _currencyRepository.Create(expected);
         var actual = await _dbContext.Currencies.FindAsync(expected.Id);
+        var actuaEntityState = _dbContext.Entry(expected).State;
 
         // Assert
         Assert.NotNull(actual);
         Assert.Equal(expected, actual);
+        Assert.Equal(expectedEntityState, actuaEntityState);
     }
     
     [Fact]
@@ -229,14 +232,17 @@ public class RepositoryTests
     {
         // Arrange
         Settlement expected = CreateTestSettlements(1).First();
+        var expectedEntityState = EntityState.Unchanged;
 
         // Act
         await _settlementRepository.Create(expected);
         var actual = await _dbContext.Settlements.FindAsync(expected.Id);
+        var actuaEntityState = _dbContext.Entry(expected).State;
 
         // Assert
         Assert.NotNull(actual);
         Assert.Equal(expected, actual);
+        Assert.Equal(expectedEntityState, actuaEntityState);
     }
     
     [Fact]
@@ -244,14 +250,17 @@ public class RepositoryTests
     {
         // Arrange
         SettlementEntry expected = CreateTestSettlementEntries(1).First();
+        var expectedEntityState = EntityState.Unchanged;
 
         // Act
         await _settlementEntryRepository.Create(expected);
         var actual = await _dbContext.Entries.FindAsync(expected.Id);
+        var actuaEntityState = _dbContext.Entry(expected).State;
 
         // Assert
         Assert.NotNull(actual);
         Assert.Equal(expected, actual);
+        Assert.Equal(expectedEntityState, actuaEntityState);
     }
 
     [Fact]
