@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Krecha.UI", "Krecha.UI\Krecha.UI.csproj", "{C48128F8-BE5A-4359-BD75-9ADDFDD2665A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Krecha.UI", "Krecha.UI\Krecha.UI.csproj", "{C48128F8-BE5A-4359-BD75-9ADDFDD2665A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Krecha.Lib", "Krecha.Lib\Krecha.Lib.csproj", "{B22F76A2-97D5-4831-A5E8-8DB6EC6A38B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Krecha.Lib", "Krecha.Lib\Krecha.Lib.csproj", "{B22F76A2-97D5-4831-A5E8-8DB6EC6A38B4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{067AA9EC-EBD9-4C33-B664-768ED91D848E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Krecha.Lib.Tests", "Tests\Krecha.Lib.Tests\Krecha.Lib.Tests.csproj", "{2EB9C090-45D2-495B-829A-C498884CD228}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,9 +27,16 @@ Global
 		{B22F76A2-97D5-4831-A5E8-8DB6EC6A38B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B22F76A2-97D5-4831-A5E8-8DB6EC6A38B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B22F76A2-97D5-4831-A5E8-8DB6EC6A38B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EB9C090-45D2-495B-829A-C498884CD228}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EB9C090-45D2-495B-829A-C498884CD228}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EB9C090-45D2-495B-829A-C498884CD228}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EB9C090-45D2-495B-829A-C498884CD228}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2EB9C090-45D2-495B-829A-C498884CD228} = {067AA9EC-EBD9-4C33-B664-768ED91D848E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5DC0D5AD-6573-4B07-BEBA-07AAA387B8EA}

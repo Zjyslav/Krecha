@@ -1,7 +1,9 @@
 ﻿using Krecha.Lib.Data;
 using Krecha.Lib.Data.Models;
 using Krecha.Lib.Interfaces.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Krecha.UI;
 public static class MauiProgram
@@ -18,7 +20,16 @@ public static class MauiProgram
 
         builder.Services.AddMauiBlazorWebView();
 
-        builder.Services.AddDbContext<SettlementsDbContext>();
+        builder.Services.AddDbContext<SettlementsDbContext>(options =>
+        {
+            var folder = Environment.SpecialFolder.LocalApplicationData;
+            var path = Environment.GetFolderPath(folder);
+            string _dbName = "krecha.db";
+            string DbPath = Path.Join(path, _dbName);
+            options.UseSqlite($"Data Source={DbPath}");
+
+        });
+
         builder.Services.AddScoped<IRepository<Currency>, Repository<Currency, SettlementsDbContext>>();
         builder.Services.AddScoped<IRepository<Settlement>, Repository<Settlement, SettlementsDbContext>>();
         builder.Services.AddScoped<IRepository<SettlementEntry>, Repository<SettlementEntry, SettlementsDbContext>>();
@@ -34,8 +45,11 @@ public static class MauiProgram
         {
             var db = scope.ServiceProvider.GetRequiredService<SettlementsDbContext>();
 
-            // uncomment to start with empty db
-            //db.Database.EnsureDeleted();
+            bool startWithEmptyDb = false;
+            if (startWithEmptyDb)
+            {
+                db.Database.EnsureDeleted();
+            }
 
             db.Database.EnsureCreated();
         }
