@@ -1,5 +1,6 @@
 ﻿using Krecha.Lib.Data;
 using Krecha.Lib.Data.Models;
+using Krecha.Lib.Interfaces.Data;
 using Microsoft.Extensions.Logging;
 
 namespace Krecha.UI;
@@ -18,9 +19,9 @@ public static class MauiProgram
         builder.Services.AddMauiBlazorWebView();
 
         builder.Services.AddDbContext<SettlementsDbContext>();
-        builder.Services.AddScoped<Repository<Currency>>();
-        builder.Services.AddScoped<Repository<Settlement>>();
-        builder.Services.AddScoped<Repository<SettlementEntry>>();
+        builder.Services.AddScoped<IRepository<Currency>, Repository<Currency, SettlementsDbContext>>();
+        builder.Services.AddScoped<IRepository<Settlement>, Repository<Settlement, SettlementsDbContext>>();
+        builder.Services.AddScoped<IRepository<SettlementEntry>, Repository<SettlementEntry, SettlementsDbContext>>();
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
