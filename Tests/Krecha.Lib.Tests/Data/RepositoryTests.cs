@@ -500,6 +500,134 @@ public class RepositoryTests
         Assert.Equal(expected, actual);
     }
 
+    [Fact]
+    public async Task Delete_WhenCurrencyDoesntExist_ShouldReturnNull()
+    {
+        // Arrange
+        int currencyId = 19;
+
+        // Act
+        var actual = await _currencyRepository.Delete(currencyId);
+
+        // Assert
+        Assert.Null(actual);
+    }
+    
+    [Fact]
+    public async Task Delete_WhenSettlementDoesntExist_ShouldReturnNull()
+    {
+        // Arrange
+        int settlementId = 19;
+
+        // Act
+        var actual = await _settlementRepository.Delete(settlementId);
+
+        // Assert
+        Assert.Null(actual);
+    }
+    
+    [Fact]
+    public async Task Delete_WhenSettlementEntryDoesntExist_ShouldReturnNull()
+    {
+        // Arrange
+        int settlementEntryId = 19;
+
+        // Act
+        var actual = await _settlementEntryRepository.Delete(settlementEntryId);
+
+        // Assert
+        Assert.Null(actual);
+    }
+
+    [Fact]
+    public async Task Delete_WhenCurrencyExists_ShouldReturnTheSameObject()
+    {
+        // Arrange
+        Currency expected = CreateAndAddToDbTestCurrencies(1).First();
+
+        // Act
+        var actual = await _currencyRepository.Delete(expected.Id);
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+    
+    [Fact]
+    public async Task Delete_WhenSettlementExists_ShouldReturnTheSameObject()
+    {
+        // Arrange
+        Settlement expected = CreateAndAddToDbTestSettlements(1).First();
+
+        // Act
+        var actual = await _settlementRepository.Delete(expected.Id);
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+    
+    [Fact]
+    public async Task Delete_WhenSettlementEntryExists_ShouldReturnTheSameObject()
+    {
+        // Arrange
+        SettlementEntry expected = CreateAndAddToDbTestSettlementEntries(1).First();
+
+        // Act
+        var actual = await _settlementEntryRepository.Delete(expected.Id);
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task Delete_WhenCurrencyExists_ShouldRemoveItFromDb()
+    {
+        // Arrange
+        Currency currency = CreateAndAddToDbTestCurrencies(1).First();
+        var expectedEntityState = EntityState.Detached;
+
+        // Act
+        await _currencyRepository.Delete(currency.Id);
+        var actual = await _dbContext.Currencies.FindAsync(currency.Id);
+        var actualEntityState = _dbContext.Entry(currency).State;
+
+        // Assert
+        Assert.Null(actual);
+        Assert.Equal(expectedEntityState, actualEntityState);
+    }
+
+    [Fact]
+    public async Task Delete_WhenSettlementExists_ShouldRemoveItFromDb()
+    {
+        // Arrange
+        Settlement settlement = CreateAndAddToDbTestSettlements(1).First();
+        var expectedEntityState = EntityState.Detached;
+
+        // Act
+        await _settlementRepository.Delete(settlement.Id);
+        var actual = await _dbContext.Settlements.FindAsync(settlement.Id);
+        var actualEntityState = _dbContext.Entry(settlement).State;
+
+        // Assert
+        Assert.Null(actual);
+        Assert.Equal(expectedEntityState, actualEntityState);
+    }
+    
+    [Fact]
+    public async Task Delete_WhenSettlementEntryExists_ShouldRemoveItFromDb()
+    {
+        // Arrange
+        SettlementEntry entry = CreateAndAddToDbTestSettlementEntries(1).First();
+        var expectedEntityState = EntityState.Detached;
+
+        // Act
+        await _settlementEntryRepository.Delete(entry.Id);
+        var actual = await _dbContext.Entries.FindAsync(entry.Id);
+        var actualEntityState = _dbContext.Entry(entry).State;
+
+        // Assert
+        Assert.Null(actual);
+        Assert.Equal(expectedEntityState, actualEntityState);
+    }
 
     private List<Currency> CreateAndAddToDbTestCurrencies(int count)
     {
