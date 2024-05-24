@@ -1,18 +1,18 @@
-﻿using Krecha.Lib.Data;
-using Krecha.Lib.Data.Models;
+﻿using Krecha.Lib.Data.Models;
+using Krecha.Lib.Interfaces.Data;
 using Krecha.Lib.Services.Requests;
 using Krecha.Lib.Services.Responses;
 
 namespace Krecha.Lib.Services;
 public class SettlementsService
 {
-    private readonly Repository<Currency> _currencyRepository;
-    private readonly Repository<Settlement> _settlementRepository;
-    private readonly Repository<SettlementEntry> _settlementEntryRepository;
+    private readonly IRepository<Currency> _currencyRepository;
+    private readonly IRepository<Settlement> _settlementRepository;
+    private readonly IRepository<SettlementEntry> _settlementEntryRepository;
 
-    public SettlementsService(Repository<Currency> currencyRepository,
-                              Repository<Settlement> settlementRepository,
-                              Repository<SettlementEntry> settlementEntryRepository)
+    public SettlementsService(IRepository<Currency> currencyRepository,
+                              IRepository<Settlement> settlementRepository,
+                              IRepository<SettlementEntry> settlementEntryRepository)
     {
         _currencyRepository = currencyRepository;
         _settlementRepository = settlementRepository;

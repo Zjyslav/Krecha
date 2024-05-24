@@ -1,27 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Krecha.Lib.Interfaces.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Krecha.Lib.Data;
-public class Repository<T>
-    where T : class
+public class Repository<TEntity, UDbContext> : IRepository<TEntity>
+    where TEntity : class
+    where UDbContext : DbContext
 {
-    private readonly SettlementsDbContext _dbContext;
+    private readonly UDbContext _dbContext;
 
-    public Repository(SettlementsDbContext dbContext)
+    public Repository(UDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public IQueryable<T> GetAll() => _dbContext.Set<T>().AsQueryable();
-    public async Task<T?> GetById<U>(U id) => await _dbContext.Set<T>().FindAsync(id);
+    public IQueryable<TEntity> GetAll() => _dbContext.Set<TEntity>().AsQueryable();
+    public async Task<TEntity?> GetById<VId>(VId id) => await _dbContext.Set<TEntity>().FindAsync(id);
 
-    public async Task<T?> Create(T entity)
+    public async Task<TEntity?> Create(TEntity entity)
     {
-        _dbContext.Set<T>().Add(entity);
+        _dbContext.Set<TEntity>().Add(entity);
         await _dbContext.SaveChangesAsync();
         return entity;
     }
 
-    public async Task<T?> Update<U>(U id, Action<T> update)
+    public async Task<TEntity?> Update<VId>(VId id, Action<TEntity> update)
     {
         var toUpdate = await GetById(id);
         if (toUpdate is null)
@@ -33,13 +35,13 @@ public class Repository<T>
         return toUpdate;
     }
 
-    public async Task<T?> Delete<U>(U id)
+    public async Task<TEntity?> Delete<VId>(VId id)
     {
         var toDelete = await GetById(id);
         if (toDelete is null)
             return null;
 
-        _dbContext.Set<T>().Remove(toDelete);
+        _dbContext.Set<TEntity>().Remove(toDelete);
         await _dbContext.SaveChangesAsync();
 
         return toDelete;
