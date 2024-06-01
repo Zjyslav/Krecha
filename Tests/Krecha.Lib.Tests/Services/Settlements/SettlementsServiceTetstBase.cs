@@ -1,4 +1,5 @@
-﻿using Krecha.Lib.Data;
+﻿using AutoFixture;
+using Krecha.Lib.Data;
 using Krecha.Lib.Data.Models;
 using Krecha.Lib.Interfaces.Data;
 using Krecha.Lib.Services;
@@ -13,6 +14,8 @@ public abstract class SettlementsServiceTetstBase
     protected Mock<IRepository<Settlement>> MockSettlementRepository { get; } = new();
     protected Mock<IRepository<SettlementEntry>> MockSettlementEntryRepository { get; } = new();
     protected SettlementsDbContext DbContext { get; }
+    protected Fixture Fixture = new();
+
     protected SettlementsServiceTetstBase()
     {
         SettlementsService = new(MockCurrencyRepository.Object,
@@ -20,5 +23,15 @@ public abstract class SettlementsServiceTetstBase
                                  MockSettlementEntryRepository.Object);
 
         DbContext = EFHelpers.SetupInMemoryDbContext();
+    }
+
+    protected Currency CreateTestCurrency()
+    {
+        Currency testCurrency = Fixture
+            .Build<Currency>()
+                .Without(currency => currency.Settlements)
+            .Create();
+
+        return testCurrency;
     }
 }
