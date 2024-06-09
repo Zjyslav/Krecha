@@ -6,7 +6,7 @@ namespace Krecha.Lib.Tests.Services.Settlements;
 public class CreateSettlementEntryAsyncTests : SettlementsServiceTetstBase
 {
     [Fact]
-    public async Task CreateSettlementEntryAsync_WhenRequestIsValid_ShouldCreateCorrectSettlement()
+    public async Task CreateSettlementEntryAsync_WhenRequestIsValid_ShouldCreateCorrectEntry()
     {
         // Arrange
         CreateSettlementEntryRequest request = CreateTestRequest();
