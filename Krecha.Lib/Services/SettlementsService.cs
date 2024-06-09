@@ -55,6 +55,7 @@ public class SettlementsService
         {
             Description = request.Description,
             Amount = request.Amount,
+            Settlement = settlement
         };
 
         await _settlementEntryRepository.Create(toCreate);

@@ -34,4 +34,15 @@ public abstract class SettlementsServiceTetstBase
 
         return testCurrency;
     }
+
+    protected Settlement CreateTestSettlement()
+    {
+        Settlement testSettlement = Fixture
+            .Build<Settlement>()
+                .Without(settlement => settlement.Entries)
+                .Without(settlement => settlement.Currency)
+            .Create();
+
+        return testSettlement;
+    }
 }
