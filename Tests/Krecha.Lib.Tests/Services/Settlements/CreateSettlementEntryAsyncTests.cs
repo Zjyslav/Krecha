@@ -3,7 +3,7 @@ using Krecha.Lib.Services.Requests;
 using Moq;
 
 namespace Krecha.Lib.Tests.Services.Settlements;
-public class CreateSettlementEntryTests : SettlementsServiceTetstBase
+public class CreateSettlementEntryAsyncTests : SettlementsServiceTetstBase
 {
     [Fact]
     public async Task CreateSettlementEntryAsync_WhenRequestIsValid_ShouldCreateCorrectSettlement()
