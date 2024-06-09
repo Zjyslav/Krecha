@@ -24,4 +24,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build Krecha.UI/Krecha.UI.csproj -c Release -f net8.0-android --verbosity normal
+      run: dotnet test Tests/Krecha.Lib.Tests/Krecha.Lib.Tests.csproj -c Release --verbosity normal
